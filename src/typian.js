@@ -7,7 +7,6 @@
 
 	//constructor
 	function Plugin(el, opts) {
-    this.default = this.opts
     this.opts = opts;
     this.el = el;
     this.$el = $(this.el);
@@ -23,12 +22,29 @@
 	// Methods
 	$.extend(Plugin.prototype, {
 		init: function () {
+
+      if(this.opts.cursor) {
+        this._setCursor();
+      }
+
       this._animate();
 		},
 
     //public methods
 
     //private _methods
+    _setCursor: function() {
+      var that = this;
+
+      that.cursor = $('<span class="'+ namespacePlugin +'-cursor">_</span>')
+                    .insertAfter(that.$el);
+
+      that.$cursor = that.cursor;
+
+      (function blink(){
+         that.$cursor.fadeOut(500).fadeIn(500, blink);
+      })();
+    },
 		_animate: function() {
       var that = this;
 
