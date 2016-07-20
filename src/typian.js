@@ -14,12 +14,15 @@
 
 	//constructor
 	function Plugin(el, opts) {
-		this.opts = opts;
-		this.el = el;
-		this.$el = $(this.el);
-
+		
+		this._defaults = $.fn[plugin].defaults;
+		this.opts = $.extend(true, {}, this._defaults, opts);
+		
 		this.timer = 0;
 		this.counter = 0;
+		
+		this.el = el;
+		this.$el = $(this.el);
 
 		this.init();
 	};
@@ -81,7 +84,7 @@
 				that._animatePart();
 			}
 
-			that.opts.onTyped();
+			that._callback('onTyped', [that]);
 		},
 
 		//
@@ -112,6 +115,15 @@
 			that.timer = setTimeout(function(){
 				that._animatePart();
 			}, that.opts.delay);
+		},
+		
+		//
+		_callback: function (func, args) {
+				var funcion = this.opts[func];
+
+				if (typeof funcion === 'function') {
+					funcion.apply(this.element, args);
+				}
 		}
 	});
 
